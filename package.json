@@ -2,7 +2,7 @@
   "name": "tinyapp",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "express_server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -11,7 +11,7 @@
     "url": "git+https://github.com/NolanDon/tinyapp.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "Nolan - Nolan796@Live.ca",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/NolanDon/tinyapp/issues"
