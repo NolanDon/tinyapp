@@ -39,11 +39,16 @@
             <td><%= url %></td>
             <td><%= urls[url] %></td>
           <td>
+           <a href="/urls/<%= url %>"> edit </a>
+            
+          
+            <td>
+            
             <form method="POST" action="/urls/<%= url %>/delete">
               <input class="pure-button" type="submit" value="delete">
             </form>
             
-          </td>
+            </td>
           </tr>
         <% } %>
       </tbody>

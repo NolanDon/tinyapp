@@ -56,8 +56,23 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 }); 
 
 app.get("/url", (req, res) => {
-res.redirect('/urls')
-})
+  res.redirect('/urls')
+});
+
+app.post("/urls/:shortURL/edit", (req, res) => {
+  console.log('Client attempting to edit a link...')
+  const shortURL = req.params.shortURL;
+  res.redirect("/urls/:shortURL/edit")
+
+
+
+}); 
+
+// Cannot POST /urls/shortURL/:id/edit9sm5xK/edit
+
+
+
+
 
 
 

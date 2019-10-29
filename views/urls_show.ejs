@@ -7,11 +7,15 @@
 </head>
 <body>
   <% include ./partials/_header %>
-  <div class="card text-center">
+  <form method="POST" action="/urls/<%= shortURL %>/edit">
+ <div class="card text-center">
       <div class="card-header"></div>
       <div class="card-body">
         <h5 class="card-title">TinyURL for: <%= longURL %></h5>
         <p class="card-text">Short URL: <a target="blank" href="/u/<%= shortURL %>"><%= shortURL %></a></p>
+        
+          <input class="pure-button" type="submit" value="edit">
+        </form>
       </div>
     <div class="card-footer text-muted"></div>
   </div>
