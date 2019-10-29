@@ -55,20 +55,20 @@ app.post("/urls/:shortURL/delete", (req, res) => {
   res.redirect("/url")
 }); 
 
-app.get("/url", (req, res) => {
-  res.redirect('/urls')
-});
-
+// app.get("/url", (req, res) => {
+//   res.redirect('/urls')
+// });
+// app.get("/urls/:shortURL/edit", (req, res) => {
+//   res.redirect("/urls/:shortURL/edit")
+// });
+// "/urls/<%= shortURL %>/edit"
 app.post("/urls/:shortURL/edit", (req, res) => {
-  console.log('Client attempting to edit a link...')
-  const shortURL = req.params.shortURL;
-  res.redirect("/urls/:shortURL/edit")
-
-
-
+  console.log('Client attempting to edit a link...', req.body.name_field)
+ urlDatabase[req.params.shortURL] = req.body.name_field;
+ res.redirect("/urls")
 }); 
 
-// Cannot POST /urls/shortURL/:id/edit9sm5xK/edit
+// Cannot POST /urls/9sm5xK/edit
 
 
 
