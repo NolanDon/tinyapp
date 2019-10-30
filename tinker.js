@@ -1,8 +1,8 @@
 const rand = function() {
-  let random = Math.random().toString(36).substring(7);
-  return random;
-  };
+setTimeout(() => {
+  console.log(1 + 1)
 
-const randomNumber = rand();
-
-console.log(randomNumber)
+  return rand(1);
+}),200
+}
+rand();
