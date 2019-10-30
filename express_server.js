@@ -2,6 +2,8 @@ const express = require("express");
 const app = express();
 const PORT = 8081; // default port 8081
 const bodyParser = require("body-parser");
+var cookieParser = require('cookie-parser');
+app.use(cookieParser());
 app.use(bodyParser.urlencoded({extended: true})); 
 app.set("view engine", "ejs");
   
@@ -10,17 +12,22 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 app.get("/urls", (req, res) => {
-  let templateVars = { urls: urlDatabase };
+  let templateVars = { urls: urlDatabase,
+    username: req.cookies["username"], };
   res.render("urls_index", templateVars);
-  });
+
+});
 app.get("/urls/new", (req, res) => {
-    res.render("urls_new");
+   let templateVars = { 
+     username: req.cookies["username"]
+   }
+  res.render("urls_new", templateVars);
 });
 app.get("/urls/:shortURL", (req, res) => {
   const longURL = urlDatabase[req.params.shortURL]
   let templateVars = { 
     shortURL: req.params.shortURL,
-    longURL: longURL
+    longURL: longURL,
   };
   res.render("urls_show", templateVars);
 });
@@ -55,21 +62,20 @@ app.post("/urls/:shortURL/delete", (req, res) => {
   res.redirect("/url")
 }); 
 
-// app.get("/url", (req, res) => {
-//   res.redirect('/urls')
-// });
-// app.get("/urls/:shortURL/edit", (req, res) => {
-//   res.redirect("/urls/:shortURL/edit")
-// });
-// "/urls/<%= shortURL %>/edit"
 app.post("/urls/:shortURL/edit", (req, res) => {
-  console.log('Client attempting to edit a link...', req.body.name_field)
+  console.log('user attempting to edit a link...', req.body.name_field)
  urlDatabase[req.params.shortURL] = req.body.name_field;
  res.redirect("/urls")
 }); 
 
-// Cannot POST /urls/9sm5xK/edit
-
+app.post("/login", (req, res) => {
+  console.log('user attempting')
+  const username = req.body.username;
+  
+  res.cookie('username', username);
+ res.redirect('/urls')
+});
+ 
 
 
 
