@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const PORT = 8081; // default port 8081
+const PORT = 8082; // default port 8081
 const bodyParser = require("body-parser");
 var cookieParser = require('cookie-parser');
 app.use(cookieParser());
@@ -28,6 +28,7 @@ app.get("/urls/:shortURL", (req, res) => {
   let templateVars = { 
     shortURL: req.params.shortURL,
     longURL: longURL,
+    username: req.cookies["username"]
   };
   res.render("urls_show", templateVars);
 });
@@ -71,11 +72,16 @@ app.post("/urls/:shortURL/edit", (req, res) => {
 app.post("/login", (req, res) => {
   console.log('user attempting')
   const username = req.body.username;
-  
   res.cookie('username', username);
  res.redirect('/urls')
 });
+
+app.post("/logout", (req, res) => {
+res.clearCookie("username");
+res.redirect('/urls')
+})
  
+
 
 
 
