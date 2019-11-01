@@ -12,33 +12,51 @@
   <header>
     <% include ./partials/_header %>
   </header>
-  <main style="margin: 1em;">
-    <h3>My URLs</h3>
+  
     <table class="table">
       <thead>
         <tr>
-          <th scope="col">Short URL</th>
+          
+
+          <% if( !username ){ %>
+            
+            <h1>👤 𝘔𝘢𝘬𝘦 𝘢𝘯 𝘢𝘤𝘤𝘰𝘶𝘯𝘵 𝘵𝘰 𝘴𝘵𝘢𝘳𝘵 𝘨𝘦𝘯𝘦𝘳𝘢𝘵𝘪𝘯𝘨 𝘭𝘪𝘯𝘬𝘴 </h1>
+            <form method="POST" action="/logout">
+            <div class="form-group mb-2">
+            </form>
+            
+           
+            
+            <% } else { %> 
+              <main style="margin: 1em;">
+                <h3>My URLs</h3>
+          <th scope="col">short URL</th>
           <th scope="col">Long URL</th>
           <th scope="col">Edit</th>
           <th scope="col">Delete</th>
-        
-        </tr>
-      </thead>
-      <tbody>
-        <% for(let url in urls) { %>
-          <tr>
-            <td><%= url %></td>
-            <td><%= urls[url] %></td>
-          <td>
-           <a href="/urls/<%= url %>"> edit </a>
-            <td>
-            <form method="POST" action="/urls/<%= url %>/delete">
-              <input class="btn btn-primary" type="submit" value="delete">
-            </form>
-            </td>
-          
           </tr>
-        <% } %>
+          </thead>
+          <tbody>
+         
+            <% for(let url in urls) { %>
+          
+              <tr>
+          <td><%= url %></td>
+          <td><%= urls[url].longURL %></td>
+          <td>
+          <a href="/urls/<%= url %>"> edit </a>
+          <td>
+          <form method="POST" action="/urls/<%= url %>/delete">
+          <input class="btn btn-primary" type="submit" value="delete">
+          </form>
+          </td>
+          </tr>
+          <% } %>
+          <% } %>
+
+      
+      
+      
       </tbody>
     </table>
   </main>
