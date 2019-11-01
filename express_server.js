@@ -1,9 +1,10 @@
 const express = require("express");
 const app = express();
-const PORT = 8085; // default port 8081
+const PORT = 8082; // default port 8081
 const bodyParser = require("body-parser");
 const bcrypt = require('bcrypt');
-
+let getUserByEmail = require('./helpers.js');
+let urlsForUser = require('./helpers.js')
 let cookieSession = require('cookie-session')
 app.use(cookieSession({
   name: 'session',
@@ -26,7 +27,7 @@ const Users = {
     email: "user2@example.com", 
     password: "dishwasher-funk"
   }
-}
+};
 app.get("/urls", (req, res) => {
  console.log(req.session.user_id, "goofy")
   const user = Users[req.session.user_id];
@@ -35,11 +36,11 @@ app.get("/urls", (req, res) => {
     return;
   }
   let userA = req.session.user_id
-  let userURL = urlsForUser(userA)
+  let userURL = urlsForUser(userA, urlDatabase)
   
   let templateVars = { 
     urls: userURL,
-    username: user
+    username: user && user.email
   };
   console.log(templateVars, "bogus")
   res.render("urls_index", templateVars);
@@ -71,11 +72,13 @@ app.post("/urls/new", (req, res) => {
   res.redirect('/urls', );         
 });
 app.get("/urls/:shortURL", (req, res) => {
-  const longURL = urlDatabase[req.params.shortURL]
+  const user = req.session.user_id;
+  const longURL = urlDatabase[req.params.shortURL];
+  
   let templateVars = { 
     shortURL: req.params.shortURL,
     longURL: longURL,
-    username: req.session.user_id
+    username: user && user.email
     
   };
   res.render("urls_show", templateVars);
@@ -84,61 +87,49 @@ app.get("/urls.json", (req, res) => {
     res.json(urlDatabase);
   json.stringify("/urls")
 });
-app.get("/", (req, res) => {
-    res.send("Hello!");
-});
-app.get("/hello", (req, res) => {
-    res.send("<html><body>Hello <b>World</b></body></html>\n");
-});
-app.listen(PORT, () => {
-    console.log(`Example app listening on port ${PORT}!`);
-});
+
+// });
 app.get("/u/:shortURL", (req, res) => {
   const longURL = urlDatabase[req.params.shortURL];
+  
   res.redirect(longURL);
 });
 app.post("/urls/:shortURL/delete", (req, res) => {
   if (user) {
   delete urlDatabase[req.params.shortURL];
-  console.log('its type is: ' + typeof req.params.shortURL + ' and its property name is: ' + req.params.shortURL)
+  
   res.redirect("/urls")
   }
 }); 
 app.post("/urls/:shortURL/edit", (req, res) => {
   let user = req.session.user_id
-  let templateVars = { 
+  if (!user) {
+    res.status(400).send('You\'re not logged in, edits cannot be made.')
+  }
+  if (user) {
+    urlDatabase[req.params.shortURL] = req.body.shortURL;
+   }
+   let templateVars = { 
     username: user && user.email,
   }
-  if (!user) {
-    res.status(404).send('You\'re not logged in so, edits cannot be made.')
-  }
-  
-  for (const user in Users) {
-    if (req.session.user_id !== user) {
-      res.status(404).send('You\'re not logged in so, edits cannot be made.')
-   } else {
-   if (user) {
-  urlDatabase[req.params.shortURL] = req.body.shortURL;
-  const user = Users[req.session.user_id];
-   }
-}};
 res.redirect("/urls", templateVars)
 });
 app.post("/logout", (req, res) => {
-  res.clearCookie('user_id');
+  req.session = null
   res.redirect('/urls')
 })
 app.post("/register", (req,res) => {
+
   if (req.body.email === "" || req.body.password === "") {
     res.status(400).send('PASSWORD OR EMAIL WAS EMPTY 👺')
-  return;
+    return;
   }
-  let copy = "";
+  let getEmail_1;
   for (let email in Users) {
     users = Users[email];
-    copy = users['email'];
+    getEmail_1 = users['email'];
   }
-  if (req.body.email === copy) {
+  if (req.body.email === getEmail_1) {
     res.send('DUPLICATE USERNAME 👺')
   return;
   }
@@ -148,7 +139,7 @@ app.post("/register", (req,res) => {
   Users[id]['id'] = id,
   Users[id]['email'] = req.body.email,
   Users[id]['password'] = hashedPassword;
-  console.log(req.session.user_id)
+  
   req.session.user_id = id; // req.session.user_id = userID
 res.redirect('/urls') 
 return;
@@ -161,33 +152,39 @@ app.get("/login", (req, res) => {
   res.render("urls_login", { username: undefined });
 })
 app.post("/login", (req, res) => {
- 
-  const enteredUsername = req.body.username
-  const enteredPass = req.body.password
-  for (const user in Users) {
   
-    userID = Users[user].id;
-  if (enteredUsername === Users[user].email) {
-  if (bcrypt.compareSync(enteredPass, Users[user].password)) {
-  req.session.user_id = userID; // req.session.user_id = 
-  res.redirect('/urls')
-  console.log('User has successfully logged in')
-}
-}
-  }
-// res.redirect('/login')
-});
-function urlsForUser(id) {
- let DataB = {}; 
-  for (let key in urlDatabase) {
-    let record = urlDatabase[key] // object longurl and userid
-    
-    if (id === record.userID){  
-      DataB[key] = record;
+  let email = req.body.username;
+  let enteredPass = req.body.password;
+  
+  let user = getUserByEmail(email, Users) 
+
+  if(user) {
+  
+    if (bcrypt.compareSync(enteredPass, user.password)) {
+      console.log("Passwords match")
+      req.session.user_id = user.id;
+      res.redirect('/urls')
+    } else {
+      res.status(400).send("Passwords don't match");
+      return;
     }
-  }
-return DataB;
-};
+  } else {
+  res.status(400).send('no account found')
+  return;
+}
+});
+
+app.listen(PORT, () => {
+  console.log(`Example app listening on port ${PORT}!`);
+});
+
+
+
+
+
+module.exports = { Users };
+
+
 
 
 const generateRandomString = function() {

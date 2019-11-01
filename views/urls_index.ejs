@@ -3,30 +3,21 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  
-  <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
   <title>TinyApp</title>
-</head>
-<body>
-  <header>
-    <% include ./partials/_header %>
-  </header>
-  
-    <table class="table">
-      <thead>
-        <tr>
-          
-
-          <% if( !username ){ %>
-            
-            <h1>👤 𝘔𝘢𝘬𝘦 𝘢𝘯 𝘢𝘤𝘤𝘰𝘶𝘯𝘵 𝘵𝘰 𝘴𝘵𝘢𝘳𝘵 𝘨𝘦𝘯𝘦𝘳𝘢𝘵𝘪𝘯𝘨 𝘭𝘪𝘯𝘬𝘴 </h1>
+  </head>
+    <body>
+      <header>
+        <% include ./partials/_header %>
+         </header>
+           <table class="table">
+            <thead>
+              <tr>
+            <% if( !username ){ %>
+           <h1>👤 𝘔𝘢𝘬𝘦 𝘢𝘯 𝘢𝘤𝘤𝘰𝘶𝘯𝘵 𝘵𝘰 𝘴𝘵𝘢𝘳𝘵 𝘨𝘦𝘯𝘦𝘳𝘢𝘵𝘪𝘯𝘨 𝘭𝘪𝘯𝘬𝘴 </h1>
             <form method="POST" action="/logout">
             <div class="form-group mb-2">
             </form>
-            
-           
-            
             <% } else { %> 
               <main style="margin: 1em;">
                 <h3>My URLs</h3>
@@ -37,9 +28,7 @@
           </tr>
           </thead>
           <tbody>
-         
             <% for(let url in urls) { %>
-          
               <tr>
           <td><%= url %></td>
           <td><%= urls[url].longURL %></td>
@@ -53,10 +42,6 @@
           </tr>
           <% } %>
           <% } %>
-
-      
-      
-      
       </tbody>
     </table>
   </main>
