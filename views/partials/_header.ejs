@@ -16,13 +16,13 @@
           <% if( username ){ %>
               <h1> welcome,  <%= username %> </h1>
               <form method="POST" action="/logout">
-              <input class="btn btn-primary" type="submit" value="logout">
+              <input class="btn btn-primary" type="submit" id="user_id" value="logout">
               <div class="form-group mb-2">
               </form>
               <% } else { %> 
-              <a class="btn btn-primary" href="/login"> login </a>
+              <a class="btn btn-primary" id="user_id" href="/login"> login </a>
               </form>
-              <a class="btn btn-primary" href="/register"> register </a>
+              <a class="btn btn-primary" id="user_id" href="/register"> register </a>
               <% } %>
             </div>
           <div> 
