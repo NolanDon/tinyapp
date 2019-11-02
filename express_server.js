@@ -27,9 +27,9 @@ const Users = {
     email: "user2@example.com",
     password: "dishwasher-funk"
   }
-// =========================================
+
 };
-// ========================================= get urls
+// ========================================= 
 app.get("/urls", (req, res) => {
   const user = Users[req.session.user_id];
   if (!user) {
@@ -45,7 +45,7 @@ app.get("/urls", (req, res) => {
   };
   res.render("urls_index", templateVars);
 });
-// ========================================= get urls new
+// ========================================= 
 app.get("/urls/new", (req, res) => {
   const user = Users[req.session.user_id];
   if (req.session.user_id === undefined) {
@@ -57,7 +57,7 @@ app.get("/urls/new", (req, res) => {
     res.render("urls_new", templateVars);
   }
 });
-// ========================================= post urls new
+// ========================================= 
 app.post("/urls/new", (req, res) => {
   const longURL = req.body.longURL;
   const shortURL = generateRandomString();
@@ -67,7 +67,7 @@ app.post("/urls/new", (req, res) => {
   urlDatabase[shortURL]['userID'] = req.session.user_id;
   res.redirect('/urls');
 });
-// ========================================= get urls :id
+// ========================================= 
 app.get("/urls/:shortURL", (req, res) => {
   const user = Users[req.session.user_id];
   const longURL = urlDatabase[req.params.shortURL]['longURL'];
@@ -80,22 +80,22 @@ app.get("/urls/:shortURL", (req, res) => {
   };
   res.render("urls_show",templateVars);
 });
-// ========================================= get urls json
+// ========================================= 
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
   json.stringify("/urls");
 });
-// ========================================= get :shortURL
+// ========================================= 
 app.get("/u/:shortURL", (req, res) => {
   const longURL = urlDatabase[req.params.shortURL].longURL;
   res.redirect(longURL);
 });
-// ========================================= post delete
+// ========================================= 
 app.post("/urls/:shortURL/delete", (req, res) => {
   delete urlDatabase[req.params.shortURL];
   res.redirect("/urls");
 });
-// ========================================= post edit
+// ========================================= 
 app.post("/urls/:shortURL/edit", (req, res) => {
   let user = req.session.user_id;
   if (!user) {
@@ -108,18 +108,18 @@ app.post("/urls/:shortURL/edit", (req, res) => {
   
   res.redirect("/urls");
 });
-// ========================================= post logout
+// ========================================= 
 app.post("/logout", (req, res) => {
   req.session = null;
   res.redirect('/urls');
 });
-// ========================================= post register
+// ========================================= 
 app.post("/register", (req,res) => {
   // if password is left empty semd error
   if (!req.body.email || !req.body.password) {
     res.status(400).send('Password field cannot be left empty, please enter a password.');
   
-  } //  loop throughdatabase to find matching username
+  } //  loop through database to find matching username
   let getEmail;
   for (let email in Users) {
     users = Users[email];
@@ -140,15 +140,15 @@ app.post("/register", (req,res) => {
   res.redirect('/urls');
   
 });
-// ========================================= get register
+// ========================================= 
 app.get("/register", (req, res) => {
   res.render("register_show", { username: undefined });
 });
-// ========================================= get login 
+// =========================================  
 app.get("/login", (req, res) => {
   res.render("urls_login", { username: undefined });
 });
-// ========================================= post login 
+// ========================================= 
 app.post("/login", (req, res) => {
   
   let email = req.body.username;
