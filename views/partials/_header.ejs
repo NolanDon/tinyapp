@@ -1,31 +1,31 @@
 <header>
    <nav class="navbar navbar-expand-md navbar-dark bg-success">
-    <a class="navbar-brand" href="/urls"> TinyApp</a>
+    <a class="navbar-brand" href="/urls"> (っ◔◡◔)っ TinyApp</a>
     <button class="navbar-toggler" type="btn btn-primary" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
+      <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
         <a class="nav-item nav-link" href="/urls">My URLs</a>
         <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
         <!-- login and logout button -->
-        <div>
-          <% if( username ){ %>
-            <h3>Logged in as: &nbsp;<span style="font-weight: normal;"> <%= username %></span></h3>
-            
-              <form method="POST" action="/logout">
-              <input class="btn btn-primary" type="submit"  id="user_id" value="logout">
-              <div class="form-group mb-2">
-              </form>
-              <% } else { %> 
-              <form class="btn btn-primary" id="user_id" style="display: inline-block;" href="/login"> login </form>
-              
-              <a class="btn btn-primary" id="user_id" href="/register"> register </a>
-              <% } %>
-            </div>
-          <div> 
-        </form>
       </div>
     </div>
+    <div>
+      <% if( username ){ %>
+        
+      </div>
+        <h6> Hi, &nbsp;<span style="font-weight: 999"> <%= username %></span></h6>
+        <form method="POST" action="/logout">
+        <input class="btn btn-primary" type="submit"  style="margin:8px;" id="user_id" value="logout">
+        </form>
+      
+        <% } else { %> 
+          <p> 𝙇𝙊𝙂𝙄𝙉 / 𝙍𝙀𝙂𝙄𝙎𝙏𝙀𝙍</p>
+          <a class="btn btn-primary" id="login" href="/login"> login </a>
+          <a class="btn btn-primary" id="user_id" href="/register"> register </a>
+        <% } %>
+      </div>
   </nav>
 </header>
+
