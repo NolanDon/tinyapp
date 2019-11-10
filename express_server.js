@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const PORT = 8082; // default port 8082
+const PORT = 8082;
 const bodyParser = require("body-parser");
 const bcrypt = require('bcrypt');
 const { getUserByEmail, generateRandomString, urlsForUser } = require('./helpers.js');
@@ -29,7 +29,6 @@ const Users = {
   }
 
 };
-
 app.get("/urls", (req, res) => {
   const user = Users[req.session.user_id];
   if (!user) {
@@ -45,7 +44,6 @@ app.get("/urls", (req, res) => {
   };
   res.render("urls_index", templateVars);
 });
-
 app.get("/urls/new", (req, res) => {
   const user = Users[req.session.user_id];
   if (req.session.user_id === undefined) {
@@ -57,7 +55,6 @@ app.get("/urls/new", (req, res) => {
     res.render("urls_new", templateVars);
   }
 });
-
 app.post("/urls/new", (req, res) => {
   const longURL = req.body.longURL;
   const shortURL = generateRandomString();
@@ -67,7 +64,6 @@ app.post("/urls/new", (req, res) => {
   urlDatabase[shortURL]['userID'] = req.session.user_id;
   res.redirect('/urls');
 });
-
 app.get("/urls/:shortURL", (req, res) => {
   const user = Users[req.session.user_id];
   const longURL = urlDatabase[req.params.shortURL]['longURL'];
@@ -85,12 +81,10 @@ app.get("/u/:shortURL", (req, res) => {
   const longURL = urlDatabase[req.params.shortURL].longURL;
   res.redirect(longURL);
 });
-
 app.post("/urls/:shortURL/delete", (req, res) => {
   delete urlDatabase[req.params.shortURL];
   res.redirect("/urls");
 });
-
 app.post("/urls/:shortURL/edit", (req, res) => {
   let user = req.session.user_id;
   if (!user) {
@@ -102,12 +96,10 @@ app.post("/urls/:shortURL/edit", (req, res) => {
   
   res.redirect("/urls");
 });
-
 app.post("/logout", (req, res) => {
   req.session = null;
   res.redirect('/urls');
 });
-
 app.post("/register", (req,res) => {
   
   if (!req.body.email || !req.body.password) {
