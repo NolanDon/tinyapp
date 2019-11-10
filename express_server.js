@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const PORT = 8082; // default port 8081
+const PORT = 8082;
 const bodyParser = require("body-parser");
 const bcrypt = require('bcrypt');
 const { getUserByEmail, generateRandomString, urlsForUser } = require('./helpers.js');
@@ -11,7 +11,7 @@ app.use(cookieSession({
   keys: ["bloop"]}));
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
-// ============================ remote databases
+
 const urlDatabase = {
   b6UTxQ: { longURL: "https://www.tsn.ca", userID: "aJ48lW" },
   i3BoGr: { longURL: "https://www.google.ca", userID: "aJ48lW" }
@@ -29,7 +29,6 @@ const Users = {
   }
 
 };
-// ========================================= 
 app.get("/urls", (req, res) => {
   const user = Users[req.session.user_id];
   if (!user) {
@@ -45,7 +44,6 @@ app.get("/urls", (req, res) => {
   };
   res.render("urls_index", templateVars);
 });
-// ========================================= 
 app.get("/urls/new", (req, res) => {
   const user = Users[req.session.user_id];
   if (req.session.user_id === undefined) {
@@ -57,17 +55,15 @@ app.get("/urls/new", (req, res) => {
     res.render("urls_new", templateVars);
   }
 });
-// ========================================= 
 app.post("/urls/new", (req, res) => {
   const longURL = req.body.longURL;
   const shortURL = generateRandomString();
   
   urlDatabase[shortURL] = {};
-  urlDatabase[shortURL]['longURL'] = 'https://' + longURL;
+  urlDatabase[shortURL]['longURL'] = longURL;
   urlDatabase[shortURL]['userID'] = req.session.user_id;
   res.redirect('/urls');
 });
-// ========================================= 
 app.get("/urls/:shortURL", (req, res) => {
   const user = Users[req.session.user_id];
   const longURL = urlDatabase[req.params.shortURL]['longURL'];
@@ -80,46 +76,36 @@ app.get("/urls/:shortURL", (req, res) => {
   };
   res.render("urls_show",templateVars);
 });
-// ========================================= 
-app.get("/urls.json", (req, res) => {
-  res.json(urlDatabase);
-  json.stringify("/urls");
-});
-// ========================================= 
+
 app.get("/u/:shortURL", (req, res) => {
   const longURL = urlDatabase[req.params.shortURL].longURL;
   res.redirect(longURL);
 });
-// ========================================= 
 app.post("/urls/:shortURL/delete", (req, res) => {
   delete urlDatabase[req.params.shortURL];
   res.redirect("/urls");
 });
-// ========================================= 
 app.post("/urls/:shortURL/edit", (req, res) => {
   let user = req.session.user_id;
   if (!user) {
     res.status(400).send('You\'re not logged in, edits cannot be made.');
   }
   if (user) {
-    console.log(urlDatabase[req.params.shortURL]);
     urlDatabase[req.params.shortURL].longURL = req.body.shortURL;
   }
   
   res.redirect("/urls");
 });
-// ========================================= 
 app.post("/logout", (req, res) => {
   req.session = null;
   res.redirect('/urls');
 });
-// ========================================= 
 app.post("/register", (req,res) => {
-  // if password is left empty semd error
+  
   if (!req.body.email || !req.body.password) {
     res.status(400).send('Password field cannot be left empty, please enter a password.');
   
-  } //  loop through database to find matching username
+  } 
   let getEmail;
   for (let email in Users) {
     users = Users[email];
@@ -128,7 +114,7 @@ app.post("/register", (req,res) => {
   if (req.body.email === getEmail) {
     res.status(400).send('That username already exists in our system, please try another.');
   
-  } // if it already exists send error, otherwise add new user to database
+  } 
   const hashedPassword = bcrypt.hashSync(req.body.password, 10);
   const id = generateRandomString();
   Users[id] = {};
@@ -140,15 +126,15 @@ app.post("/register", (req,res) => {
   res.redirect('/urls');
   
 });
-// ========================================= 
+
 app.get("/register", (req, res) => {
   res.render("register_show", { username: undefined });
 });
-// =========================================  
+
 app.get("/login", (req, res) => {
   res.render("urls_login", { username: undefined });
 });
-// ========================================= 
+
 app.post("/login", (req, res) => {
   
   let email = req.body.username;
@@ -157,7 +143,6 @@ app.post("/login", (req, res) => {
   let user = getUserByEmail(email, Users);
   if (user) {
     if (bcrypt.compareSync(enteredPass, user.password)) {
-      console.log("Passwords match");
       req.session.user_id = user.id;
       res.redirect('/urls');
     } else {
@@ -169,9 +154,8 @@ app.post("/login", (req, res) => {
     return;
   }
 });
-// ========================================= 
+
 app.listen(PORT, () => {
-  console.log(`Example app listening on port ${PORT}!`);
 });
 module.exports = { Users };
 
