@@ -97,7 +97,6 @@ app.post("/urls/:shortURL/edit", (req, res) => {
     res.status(400).send('You\'re not logged in, edits cannot be made.');
   }
   if (user) {
-    console.log(urlDatabase[req.params.shortURL]);
     urlDatabase[req.params.shortURL].longURL = req.body.shortURL;
   }
   
@@ -152,7 +151,6 @@ app.post("/login", (req, res) => {
   let user = getUserByEmail(email, Users);
   if (user) {
     if (bcrypt.compareSync(enteredPass, user.password)) {
-      console.log("Passwords match");
       req.session.user_id = user.id;
       res.redirect('/urls');
     } else {
@@ -166,7 +164,6 @@ app.post("/login", (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Example app listening on port ${PORT}!`);
 });
 module.exports = { Users };
 
