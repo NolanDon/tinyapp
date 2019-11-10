@@ -44,6 +44,7 @@ app.get("/urls", (req, res) => {
   };
   res.render("urls_index", templateVars);
 });
+
 app.get("/urls/new", (req, res) => {
   const user = Users[req.session.user_id];
   if (req.session.user_id === undefined) {
@@ -55,6 +56,7 @@ app.get("/urls/new", (req, res) => {
     res.render("urls_new", templateVars);
   }
 });
+
 app.post("/urls/new", (req, res) => {
   const longURL = req.body.longURL;
   const shortURL = generateRandomString();
@@ -64,8 +66,16 @@ app.post("/urls/new", (req, res) => {
   urlDatabase[shortURL]['userID'] = req.session.user_id;
   res.redirect('/urls');
 });
+
 app.get("/urls/:shortURL", (req, res) => {
   const user = Users[req.session.user_id];
+  let shortURL = req.params.shortURL
+
+  if (urlDatabase[shortURL].userID !== user.id) {
+    res.status(403).send('You do not have permission');
+  }
+  
+  urlDatabase[req.params.shortURL].longURL = req.body.shortURL;
   const longURL = urlDatabase[req.params.shortURL]['longURL'];
 
   let templateVars = {
@@ -82,18 +92,21 @@ app.get("/u/:shortURL", (req, res) => {
   res.redirect(longURL);
 });
 app.post("/urls/:shortURL/delete", (req, res) => {
+  const user = Users[req.session.user_id];
+  shortURL = req.params.shortURL
+  if (urlDatabase[shortURL].userID !== user.id) {
+    res.status(403).send('You do not have permission');
+  }
   delete urlDatabase[req.params.shortURL];
   res.redirect("/urls");
 });
 app.post("/urls/:shortURL/edit", (req, res) => {
+  let shortURL = req.params.shortURL
   let user = req.session.user_id;
-  if (!user) {
-    res.status(400).send('You\'re not logged in, edits cannot be made.');
+  if (urlDatabase[shortURL].userID !== user.id) {
+    res.status(403).send('You do not have permission');
   }
-  if (user) {
     urlDatabase[req.params.shortURL].longURL = req.body.shortURL;
-  }
-  
   res.redirect("/urls");
 });
 app.post("/logout", (req, res) => {
