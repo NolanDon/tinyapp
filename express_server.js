@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const PORT = 8082; // default port 8081
+const PORT = 8082; // default port 8082
 const bodyParser = require("body-parser");
 const bcrypt = require('bcrypt');
 const { getUserByEmail, generateRandomString, urlsForUser } = require('./helpers.js');
@@ -110,11 +110,11 @@ app.post("/logout", (req, res) => {
 });
 
 app.post("/register", (req,res) => {
-  // if password/username = empty send error
+  
   if (!req.body.email || !req.body.password) {
     res.status(400).send('Password field cannot be left empty, please enter a password.');
   
-  } //  loop throughdatabase to find matching username
+  } 
   let getEmail;
   for (let email in Users) {
     users = Users[email];
@@ -123,7 +123,7 @@ app.post("/register", (req,res) => {
   if (req.body.email === getEmail) {
     res.status(400).send('That username already exists in our system, please try another.');
   
-  } // if it already exists send error, otherwise add new user to database
+  } 
   const hashedPassword = bcrypt.hashSync(req.body.password, 10);
   const id = generateRandomString();
   Users[id] = {};
