@@ -70,16 +70,15 @@ app.post("/urls/new", (req, res) => {
 app.get("/urls/:shortURL", (req, res) => {
   const user = Users[req.session.user_id];
   let shortURL = req.params.shortURL
-
+ 
   if (urlDatabase[shortURL].userID !== user.id) {
     res.status(403).send('You do not have permission');
   }
   
-  urlDatabase[req.params.shortURL].longURL = req.body.shortURL;
-  const longURL = urlDatabase[req.params.shortURL]['longURL'];
+  longURL = urlDatabase[shortURL].longURL;
 
   let templateVars = {
-    shortURL: req.params.shortURL,
+    shortURL: shortURL,
     longURL: longURL,
     username: user && user.email
     
@@ -91,28 +90,33 @@ app.get("/u/:shortURL", (req, res) => {
   const longURL = urlDatabase[req.params.shortURL].longURL;
   res.redirect(longURL);
 });
+
 app.post("/urls/:shortURL/delete", (req, res) => {
   const user = Users[req.session.user_id];
-  shortURL = req.params.shortURL
+  let shortURL = req.params.shortURL
   if (urlDatabase[shortURL].userID !== user.id) {
     res.status(403).send('You do not have permission');
   }
   delete urlDatabase[req.params.shortURL];
   res.redirect("/urls");
 });
+
 app.post("/urls/:shortURL/edit", (req, res) => {
+  const user = Users[req.session.user_id];
   let shortURL = req.params.shortURL
-  let user = req.session.user_id;
+ 
   if (urlDatabase[shortURL].userID !== user.id) {
     res.status(403).send('You do not have permission');
   }
     urlDatabase[req.params.shortURL].longURL = req.body.shortURL;
   res.redirect("/urls");
 });
+
 app.post("/logout", (req, res) => {
   req.session = null;
   res.redirect('/urls');
 });
+
 app.post("/register", (req,res) => {
   
   if (!req.body.email || !req.body.password) {
