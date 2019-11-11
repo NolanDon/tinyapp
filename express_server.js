@@ -70,8 +70,9 @@ app.post("/urls/new", (req, res) => {
 app.get("/urls/:shortURL", (req, res) => {
   const user = Users[req.session.user_id];
   let shortURL = req.params.shortURL
- 
-  if (urlDatabase[shortURL].userID !== user.id) {
+  console.log(user)
+
+  if (user === undefined || urlDatabase[shortURL].userID !== user.id) {
     res.status(403).send('You do not have permission');
   }
   
@@ -94,7 +95,7 @@ app.get("/u/:shortURL", (req, res) => {
 app.post("/urls/:shortURL/delete", (req, res) => {
   const user = Users[req.session.user_id];
   let shortURL = req.params.shortURL
-  if (urlDatabase[shortURL].userID !== user.id) {
+  if (user === undefined || urlDatabase[shortURL].userID !== user.id) {
     res.status(403).send('You do not have permission');
   }
   delete urlDatabase[req.params.shortURL];
